@@ -16,9 +16,24 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 app.secret_key = SECRET_KEY
 
-# ------------------- Load ML model and scaler -------------------
-model = joblib.load("irrigation_model_xgb_balanced.pkl")  # your classifier
-scaler = joblib.load("scaler.pkl")  # MinMaxScaler
+import os
+
+models_path = os.path.join(os.path.dirname(__file__), "models")
+model_file = os.path.join(models_path, "irrigation_model_xgb_balanced.pkl")
+scaler_file = os.path.join(models_path, "scaler.pkl")
+
+# Check if files exist
+print("Model exists:", os.path.exists(model_file))
+print("Scaler exists:", os.path.exists(scaler_file))
+
+# Now load them only if they exist
+if os.path.exists(model_file) and os.path.exists(scaler_file):
+    import joblib
+    model = joblib.load(model_file)
+    scaler = joblib.load(scaler_file)
+else:
+    raise FileNotFoundError("Model or scaler file not found in 'models/' folder!")
+
 
 # Load main training dataset for crops list
 df = pd.read_csv("irrigation_crop_data_50k.csv")
@@ -243,4 +258,5 @@ def simulate():
     return jsonify(sensor_data)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port or 5000 locally
+    app.run(host="0.0.0.0", port=port, debug=True)
