@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up — Smart Irrigation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f9f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .signup-card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .signup-card h2 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .signup-card form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .signup-card input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .signup-card button {
+      padding: 12px;
+      background: #1abc9c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .signup-card button:hover {
+      background: #16a085;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .link-text {
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .link-text a {
+      color: #1abc9c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .link-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-card">
+    <h2>Create Your Account</h2>
+    {% if error %}
+      <div class="error-msg">{{ error }}</div>
+    {% endif %}
+    <form method="POST">
+      <input type="text" name="username" placeholder="Choose a username" required>
+      <input type="password" name="password" placeholder="Enter a password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="link-text">
+      Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+    </div>
+  </div>
+</body>
+</html>

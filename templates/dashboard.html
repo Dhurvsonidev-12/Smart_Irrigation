@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Irrigation — Jorethang, South Sikkim</title>
+  <meta name="description" content="Smart sustainable irrigation system for Jorethang — rainwater harvesting, sensor monitoring & AI-driven crop intelligence." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <p style="text-align:right; margin-right:20px;">
+      Welcome, <strong>{{ username }}</strong>!
+    </p>
+    <header>
+      <div class="brand">
+        <div class="logo-container">
+          <div class="agro-logo"><h2>AgroFarming</h2></div>
+          <div class="logo">SI</div>
+        </div>
+        <div>
+          <h1>SmartIrrigate — Jorethang</h1>
+          <div class="small">Rainwater • Sensors • AI</div>
+        </div>
+      </div>
+      <div class="hamburger" id="hamburger">☰</div>
+      <nav>
+        <nav>
+          <a href="#features">Features</a>
+          <a href="#how">How it Works</a>
+          <a href="#demo">Live Demo</a>
+          <a href="#contact">Contact</a>
+        
+          {% if 'user' in session %}
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+          {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+          {% endif %}
+        </nav>
+        
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-left">
+          <img src="static/images/arr.jpeg" alt="Irrigation">
+          <h2 class="reveal slide-left">Sustainable Irrigation for a Climate-Changing Jorethang</h2>
+          <p class="reveal slide-right">Harsh summers and water scarcity reduce yields. SmartIrrigate integrates rainwater harvesting, sensor-based monitoring and AI-driven crop intelligence to conserve water and improve productivity.</p>
+          <div class="btn-row">
+            <a class="btn primary reveal fade-in" href="https://smartirrigation.com/" target="_blank">Get Started</a>
+            <button class="btn reveal fade-in">Learn More</button>
+          </div>
+          <div class="features" id="features">
+            <div class="feature reveal fade-in"><h4>💧 Rainwater Harvesting</h4><p class="muted">Collect & store seasonal rain to use in dry spells.</p></div>
+            <div class="feature reveal fade-in"><h4>📡 Sensor Monitoring</h4><p class="muted">Measure soil moisture & reservoir status in real time.</p></div>
+            <div class="feature reveal fade-in"><h4>🤖 AI Crop Intelligence</h4><p class="muted">Adaptive irrigation scheduling that saves water.</p></div>
+          </div>
+        </div>
+
+        <div class="dashboard card reveal fade-in" id="demo">
+          <!-- Mode Toggle -->
+          <div class="card" style="margin-top:20px;">
+            <h4>Mode</h4>
+            <button class="btn btn-auto" onclick="toggleManualMode()">Manual</button>
+            <button class="btn btn-manual" onclick="setMode('auto')">Auto</button>
+          </div>
+
+          <!-- Manual Pump Control -->
+          <div class="card" id="manualControl" style="display: none;">
+            <h4>Manual Pump Control</h4>
+            <button class="btn btn-primary" onclick="controlPump(true)">Turn Pump ON</button>
+            <button class="btn btn-primary" onclick="controlPump(false)">Turn Pump OFF</button>
+          </div>
+
+          <h3>Live Irrigation Dashboard</h3>
+          <div class="meter">
+            <div class="gauge"><div class="value" id="soilVal">42%</div><div class="legend">Soil Moisture</div></div>
+            <div class="gauge"><div class="value" id="resVal">58%</div><div class="legend">Reservoir</div></div>
+          </div>
+          <div class="meter">
+            <div class="gauge"><div class="value" id="liters">1200</div><div class="legend">Liters Remaining</div></div>
+            <div class="gauge"><div class="value" id="humidityVal">{{ humidity }}%</div><div class="legend">Humidity Status</div></div>
+          </div>
+
+          <div class="card" style="background:#f9fdfb">
+            <div class="pill">AI Suggestion</div>
+            <p id="aiText">AI prediction unavailable.</p>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <h4>Calculate Water Requirement</h4>
+            <input type="number" id="area" placeholder="Area in sq meters" required>
+            <select id="crop">
+              {% for c in crops %}
+                <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn primary" onclick="calculateWaterAndPredict()">Calculate</button>
+            <p id="waterResult">Enter area and crop to calculate water needed.</p>
+          </div>
+          <div id="weatherInfo"></div>
+          <p class="small">Last updated: <span id="lastUpdated"></span></p>
+        </div>
+      </section>
+
+      <section class="how" id="how">
+        <div class="diagram reveal slide-right">
+          <h3>How SmartIrrigate Works</h3>
+          <img src="static/images/arrow.png" alt="Irrigation Diagram">
+        </div>
+        <div class="steps">
+          <div class="step reveal slide-left">
+            <div class="bullet">1</div>
+            <div>
+              <h4>Rainwater Collection</h4>
+              <p class="muted">Catch & store rooftop rainwater.</p>
+            </div>
+          </div>
+          <div class="step reveal slide-left">
+            <div class="bullet">2</div>
+            <div>
+              <h4>Sensor Network</h4>
+              <p class="muted">Soil & tank sensors send live data.</p>
+            </div>
+          </div>
+          <div class="step reveal slide-left">
+            <div class="bullet">3</div>
+            <div>
+              <h4>AI Recommendations</h4>
+              <p class="muted">Optimized irrigation schedule.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" style="margin-top:34px">
+        <h3>Contact Us</h3>
+        <form class="contact-form">
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="xyz@gmail.com" required>
+          <textarea placeholder="Your Message"></textarea>
+          <button class="btn primary" style="grid-column:1/-1">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> SmartIrrigate — Designed for Jorethang, South Sikkim. Built with low-cost sensors, community-first operations and optional solar pumps.
+    </footer>
+  </div>
+
+  <script>
+    const soilEl = document.getElementById('soilVal');
+    const resEl = document.getElementById('resVal');
+    const litersEl = document.getElementById('liters');
+    const humidityEl = document.getElementById('humidityVal');
+    const aiText = document.getElementById('aiText');
+    const lastUpdated = document.getElementById('lastUpdated');
+    const waterResult = document.getElementById('waterResult');
+    const weatherInfo = document.getElementById('weatherInfo');
+    const yearEl = document.getElementById('year');
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.querySelector('nav');
+
+    let soil = 0;
+    let reservoir = 0;
+    let liters = 1200;
+    let humidity = 0;
+    let currentMode = 'auto';
+
+    function updateModeDisplay(mode) {
+      const manualControl = document.getElementById('manualControl');
+      if (mode === 'manual') manualControl.style.display = 'block';
+      else manualControl.style.display = 'none';
+      currentMode = mode;
+    }
+
+    async function toggleManualMode() {
+      const newMode = currentMode === 'manual' ? 'auto' : 'manual';
+      try {
+        const res = await fetch('/api/set_mode', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({mode: newMode})
+        });
+        const data = await res.json();
+        if (data.status === 'success') updateModeDisplay(newMode);
+        else console.error("Error setting mode:", data.message);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function setMode(mode) {
+      try {
+        const res = await fetch('/api/set_mode', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({mode})
+        });
+        const data = await res.json();
+        if (data.status === 'success') updateModeDisplay(mode);
+      } catch (err) { console.error(err); }
+    }
+
+    async function controlPump(state) {
+      if (currentMode !== 'manual') { alert("Pump can only be controlled in manual mode"); return; }
+      try {
+        const res = await fetch('/api/control_pump', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({pump: state})
+        });
+        const data = await res.json();
+        if (data.status !== 'success') alert(data.message);
+      } catch (err) { console.error(err); }
+    }
+
+    function updateDisplay() {
+      soilEl.textContent = `${soil}%`;
+      resEl.textContent = `${reservoir}%`;
+      litersEl.textContent = liters;
+      humidityEl.textContent = `${humidity}%`;
+    }
+
+    async function calculateWaterAndPredict() {
+      const area = parseFloat(document.getElementById('area').value);
+      const crop = document.getElementById('crop').value;
+      if (!area || area <= 0) { waterResult.textContent = "Enter valid area"; return; }
+      try {
+        const response = await fetch('/api/predict', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ area: area, crop: crop })
+        });
+        const data = await response.json();
+        if (data.error) {
+          waterResult.textContent = "Error: " + data.error;
+    }   else {
+          const liters = data.water_needed_liters !== undefined ? data.water_needed_liters : "N/A";
+          waterResult.textContent = `Irrigation Needed: ${data.irrigation_needed ? "YES" : "NO"}, Approx Water: ${liters} liters`;
+          } 
+        }
+      catch (error) {
+        console.error(error);
+        waterResult.textContent = "Error calculating irrigation";
+      }
+    }
+
+      async function fetchSensorDataAndPrediction() {
+       try {
+        const res = await fetch('/api/get_sensor_data');
+        const data = await res.json();
+        soil = data.soil_moisture || 0;
+        reservoir = data.reservoir || 0;
+        liters = data.liters || 0;
+        humidity = data.humidity || 0;
+        lastUpdated.textContent = data.last_updated || 'N/A';
+        updateDisplay();
+        if (data.mode) updateModeDisplay(data.mode);
+
+        // AI Prediction
+        const cropSelect = document.getElementById('crop');
+        const crop = cropSelect.options[cropSelect.selectedIndex].text;
+        const predRes = await fetch('/api/predict', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({soil_moisture: soil, crop})
+        });
+        const predData = await predRes.json();
+        if (!predData.error) {
+          aiText.textContent = predData.irrigation_needed
+            ? `Irrigation recommended! Reason: ${predData.reason}`
+            : `No irrigation needed. Reason: ${predData.reason}`;
+        } else aiText.textContent = "AI prediction unavailable.";
+      } catch (err) { console.error(err); }
+    }
+
+    const API_KEY = "a82e942f89e3562b0f7d5ab547b3a1ff";
+    const LAT = "27.18";
+    const LON = "88.50";
+    async function fetchWeather() {
+      try {
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric`);
+        const data = await res.json();
+        weatherInfo.textContent = `Current weather: ${data.weather[0].description}, ${data.main.temp}°C`;
+      } catch (err) { weatherInfo.textContent = "Weather data not available."; }
+    }
+
+    hamburger.addEventListener('click', () => nav.classList.toggle('show'));
+    document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => nav.classList.remove('show')));
+    document.addEventListener('click', (event) => {
+      if (!nav.contains(event.target) && !hamburger.contains(event.target)) nav.classList.remove('show');
+    });
+
+    function revealElements() {
+      document.querySelectorAll('.reveal').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('visible');
+      });
+    }
+    window.addEventListener('scroll', revealElements);
+    window.addEventListener('load', revealElements);
+
+    yearEl.textContent = new Date().getFullYear();
+    fetchWeather();
+    fetchSensorDataAndPrediction();
+    setInterval(fetchSensorDataAndPrediction, 5000); 
+  </script>
+</body>
+</html>
