@@ -60,11 +60,6 @@ We use environmental and agricultural datasets such as:
 
 ---
 
-## 📷 Project Demo  
-*(Add screenshots or images of your dashboard, sensor setup, etc.)*  
-
----
-
 ## 👨‍💻 Contributors  
 - Dhruv Soni (Project Developer)  
 
