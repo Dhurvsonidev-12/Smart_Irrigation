@@ -9,10 +9,12 @@ import os
 from sklearn.preprocessing import LabelEncoder
 
 app = Flask(__name__)
-app.secret_key = 'Kashish'
 app.permanent_session_lifetime = timedelta(days=5)
 
 load_dotenv()
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+app.secret_key = SECRET_KEY
 
 # ------------------- Load ML model and scaler -------------------
 model = joblib.load("irrigation_model_xgb_balanced.pkl")  # your classifier
