@@ -1,4 +1,4 @@
-# 🌱 Smart Irrigation System with Machine Learning  
+# 🌱 Smart Irrigation System
 
 This project is an **IoT + ML-powered Smart Irrigation System** designed to help farmers and gardeners **save water, increase crop yield, and automate irrigation** decisions.  
 
